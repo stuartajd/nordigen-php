@@ -1,6 +1,6 @@
 {
-    "name": "nordigen/nordigen-php",
-    "description": "Nordigen official API client for PHP",
+    "name": "stuartajd/nordigen-php",
+    "description": "Nordigen API client for PHP",
     "type": "library",
     "authors": [
         {

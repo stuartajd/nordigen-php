@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.4] - 2025-09-12
+
+- Fixed dynamic property creation - https://github.com/nordigen/nordigen-php/pull/27
+- Added reconfirm end of user agreement endpoint
+
 ## [1.1.3] - 2025-04-07
 
 - Add maintenance notice to README
