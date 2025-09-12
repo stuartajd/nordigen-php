@@ -1,10 +1,6 @@
 # Nordigen PHP Library
 
-### ⚠️ Notice
-Please be advised that the Bank Account Data libraries are no longer actively updated or maintained. While these libraries may still function, GoCardless will not provide further updates, bug fixes, or support for them.
-#
-
-This is official PHP client library for [GoCardless Bank Account Data](https://gocardless.com/bank-account-data/).
+This is a PHP client library for [GoCardless Bank Account Data](https://gocardless.com/bank-account-data/).
 
 For a full list of endpoints and arguments, see the [docs](https://developer.gocardless.com/bank-account-data/quick-start-guide).
 
@@ -20,7 +16,7 @@ Before starting to use API you will need to create a new secret and get your `SE
 Install library via composer:
 
 ```sh
-composer require nordigen/nordigen-php
+composer require stuartajd/nordigen-php
 ```
 
 ## Example application
@@ -102,14 +98,10 @@ $transactions = $account->getAccountTransactions("2021-12-01", "2022-01-30");
 $premiumTransactions = $account->getPremiumAccountTransactions();
 ```
 
-In order to use Premium endpoin please contact our [bank-account-data-support@gocardless.com](bank-account-data-support@gocardless.com)
+In order to use Premium endpoints please contact our [bank-account-data-support@gocardless.com](bank-account-data-support@gocardless.com)
 
 ## Tests
 
 ```php
 ./vendor/bin/phpunit
 ```
-
-## Support
-
-For any inquiries please contact support at [bank-account-data-support@gocardless.com](bank-account-data-support@gocardless.com) or create an issue in the repository.
