@@ -103,4 +103,18 @@ class EndUserAgreement
         $json = json_decode($response->getBody()->getContents(), true);
         return $json;
     }
+    
+    /**
+     * Reconfirm an End-user agreement.
+     * @param string $euaId The ID of the End-user Agreement.
+     * @return array The newly accepted End-user agreement.
+     */
+    public function reconfirmEndUserAgreement(
+        string $endUserAgreementId,
+    ): array
+    {
+        $response = $this->requestHandler->put("agreements/enduser/{$endUserAgreementId}/reconfirm/");
+        $json = json_decode($response->getBody()->getContents(), true);
+        return $json;
+    }
 }
