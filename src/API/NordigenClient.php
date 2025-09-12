@@ -68,14 +68,16 @@ class NordigenClient
         ?string $userLanguage = null,
         ?string $ssn = null,
         ?bool $accountSelection = null,
-        ?bool $redirectImmediate = null
+        ?bool $redirectImmediate = null,
+        ?bool $reconfirmEndUserAgreement = false
     ): array
     {
         $endUserAgreement = $this->endUserAgreement->createEndUserAgreement(
             $institutionIdentifier,
             $accessScopes,
             $maxHistoricalDays,
-            $accessValidForDays
+            $accessValidForDays,
+            $reconfirmEndUserAgreement
         );
         $requisition = $this->requisition->createRequisition(
             $redirect,
