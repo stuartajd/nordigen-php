@@ -55,6 +55,7 @@ class NordigenClient
      * @param string|null $ssn SSN (social security number) field to verify ownership of the account.
      * @param bool|null $accountSelection Option to enable account selection view for the end user.
      * @param bool|null $redirectImmediate Option to enable redirect back to the client after account list received
+     * @param bool|null $reconfirmEndUserAgreement Option to enable reconfirmation of the End-user Agreement.
      *
      * @return array
      */
