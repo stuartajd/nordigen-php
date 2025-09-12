@@ -31,6 +31,7 @@ class EndUserAgreement
      * @param string[] $accessScope The requested access scope. All by default. See Enums\AccessScope for possible values.
      * @param int|null $maxHistoricalDays Maximum number of days of transaction data to retrieve. 90 by default.
      * @param int|null $accessValidForDays How long access to the end-user's account will be available. 90 days by default.
+     * @param bool $reconfirmation Whether to allow reconfirmation of the End-user Agreement.
      *
      * @return array
      */
@@ -38,14 +39,16 @@ class EndUserAgreement
         string $institutionId,
         array $accessScope = ['details', 'balances', 'transactions'],
         int $maxHistoricalDays = 90,
-        int $accessValidForDays = 90
+        int $accessValidForDays = 90,
+        bool $reconfirmation = false,
     ): array
     {
         $payload = [
             'max_historical_days' => $maxHistoricalDays,
             'access_valid_for_days' => $accessValidForDays,
             'access_scope' => $accessScope,
-            'institution_id' => $institutionId
+            'institution_id' => $institutionId,
+            'reconfirmation' => $reconfirmation
         ];
         $response = $this->requestHandler->post('agreements/enduser/', [
             'json' => $payload
@@ -121,13 +124,23 @@ class EndUserAgreement
     /**
      * Reconfirm an End-user agreement.
      * @param string $euaId The ID of the End-user Agreement.
+     * @param string $redirectUrl The URL to redirect the user to after reconfirmation.
      * @return array The reconfirmed End-user agreement.
      */
     public function reconfirmEndUserAgreement(
         string $endUserAgreementId,
+        string $redirectUrl = null
     ): array
     {
-        $response = $this->requestHandler->put("agreements/enduser/{$endUserAgreementId}/reconfirm/");
+        $payload = [];
+
+        if ($redirectUrl !== null) {
+            $payload['redirect'] = $redirectUrl;
+        }
+
+        $response = $this->requestHandler->put("agreements/enduser/{$endUserAgreementId}/reconfirm/", [
+            'json' => $payload
+        ]);
         $json = json_decode($response->getBody()->getContents(), true);
         return $json;
     }
