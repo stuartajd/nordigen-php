@@ -87,6 +87,8 @@ class Account {
         if ($exp !== null) {
             throw $exp;
         }
+
+        return $json;
     }
 
     /**
