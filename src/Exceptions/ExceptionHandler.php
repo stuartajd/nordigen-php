@@ -39,17 +39,44 @@ class ExceptionHandler
     {
         $content = $response->getBody()->getContents();
         $json = json_decode($content, true);
+        $errorCode = $response->getStatusCode();
+        
+        // Handle cases where response might not be valid JSON
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($json)) {
+            $message = "HTTP {$errorCode} Error";
+            if (!empty($content)) {
+                $message .= ": " . trim($content);
+            }
+            throw new NordigenException($response, $message, $errorCode);
+        }
+        
         $errorType = self::getExceptionType($json);
         $summary = $json['summary'] ?? '';
         $detail = $json['detail'] ?? '';
-        $message = "{$summary} {$detail}";
-        $errorCode = $response->getStatusCode();
+        
+        // Build comprehensive error message
+        $messageParts = [];
+        if (!empty($summary)) {
+            $messageParts[] = $summary;
+        }
+        if (!empty($detail)) {
+            $messageParts[] = $detail;
+        }
+        
+        // If no summary or detail, try to include other error information
+        if (empty($messageParts)) {
+            if (isset($json['message'])) {
+                $messageParts[] = $json['message'];
+            } elseif (isset($json['error'])) {
+                $messageParts[] = is_string($json['error']) ? $json['error'] : json_encode($json['error']);
+            } elseif (!empty($content)) {
+                $messageParts[] = trim($content);
+            }
+        }
+        
+        $message = !empty($messageParts) ? implode(' ', $messageParts) : "HTTP {$errorCode} Error";
 
         $exception = self::$institutionExceptionMap[$errorType] ?? NordigenException::class;
-        if ($exception == NordigenException::class) {
-            $message = $summary;
-        }
-
-        throw new $exception($response, $message, $errorCode);
+        throw new $exception($response, trim($message), $errorCode);
     }
 }

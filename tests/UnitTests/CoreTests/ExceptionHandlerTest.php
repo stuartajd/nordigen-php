@@ -39,4 +39,25 @@ class ExceptionHandlerTest extends TestCase
         $this->expectException(NordigenException::class);
         ExceptionHandler::handleException($response);
     }
+
+    /**
+     * @covers \Nordigen\NordigenPHP\Exceptions\ExceptionHandler
+     */
+    public function testNordigenExceptionIncludesFullErrorDetails()
+    {
+        $jsonBody = json_encode([
+            'summary' => 'Authentication failed',
+            'detail' => 'Invalid API credentials provided',
+            'type' => 'SomeNewError'
+        ]);
+        $response = new Response(401, [], $jsonBody);
+
+        try {
+            ExceptionHandler::handleException($response);
+            $this->fail('Expected NordigenException to be thrown');
+        } catch (NordigenException $e) {
+            $this->assertStringContainsString('Authentication failed', $e->getMessage());
+            $this->assertStringContainsString('Invalid API credentials provided', $e->getMessage());
+        }
+    }
 }
