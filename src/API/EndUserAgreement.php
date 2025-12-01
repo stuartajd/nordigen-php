@@ -138,7 +138,7 @@ class EndUserAgreement
             $payload['redirect'] = $redirectUrl;
         }
 
-        $response = $this->requestHandler->put("agreements/enduser/{$endUserAgreementId}/reconfirm/", [
+        $response = $this->requestHandler->post("agreements/enduser/{$endUserAgreementId}/reconfirm/", [
             'json' => $payload
         ]);
         $json = json_decode($response->getBody()->getContents(), true);
