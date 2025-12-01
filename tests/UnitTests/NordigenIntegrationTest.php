@@ -12,15 +12,20 @@ use PHPUnit\Framework\TestCase;
 class NordigenIntegrationTest extends TestCase
 {
     private static ?Client $client;
+
     private static NordigenClient $nordigenClient;
+
     private static ?MockHandler $mock;
+
     private static ?HandlerStack $handlerStack;
+
     private static string $responseEUA;
+
     private static string $responseRequisition;
 
     public static function setUpBeforeClass(): void
     {
-        self::$mock = new MockHandler();
+        self::$mock = new MockHandler;
         self::$handlerStack = HandlerStack::create(self::$mock);
         self::$client = new Client(['handler' => self::$handlerStack]);
         self::$nordigenClient = new NordigenClient(
@@ -70,7 +75,7 @@ class NordigenIntegrationTest extends TestCase
     /**
      * @covers \Nordigen\NordigenPHP\NordigenIntegration
      */
-    public function testInstitutionIsCreatedFromResponse(): void
+    public function test_institution_is_created_from_response(): void
     {
         $responseBody = '
             {
@@ -92,7 +97,7 @@ class NordigenIntegrationTest extends TestCase
     /**
      * @covers \Nordigen\NordigenPHP\API\Institution
      */
-    public function testMultipleInstitutionObjectsAreCreatedFromResponse(): void
+    public function test_multiple_institution_objects_are_created_from_response(): void
     {
         $responseBody = '
             [
@@ -126,7 +131,7 @@ class NordigenIntegrationTest extends TestCase
     /**
      * @covers \Nordigen\NordigenPHP\API\EndUserAgreement
      */
-    public function testEUAIsCreatedFromResponse()
+    public function test_eua_is_created_from_response()
     {
         $response = new Response(200, [], self::$responseEUA);
         self::$mock->append($response);
@@ -134,23 +139,22 @@ class NordigenIntegrationTest extends TestCase
         $this->assertEquals(json_decode(self::$responseEUA, true), $actual);
     }
 
-
     /**
      * @covers \Nordigen\NordigenPHP\API\EndUserAgreement
      */
-    public function testCreateEua()
+    public function test_create_eua()
     {
 
         $response = new Response(200, [], self::$responseEUA);
         self::$mock->append($response);
-        $result = self::$nordigenClient->endUserAgreement->createEndUserAgreement("TEST");
+        $result = self::$nordigenClient->endUserAgreement->createEndUserAgreement('TEST');
         $this->assertEquals(json_decode(self::$responseEUA, true), $result);
     }
 
     /**
      * @covers Nordigen\NordigenPHP\Nordigen\Requisition
      */
-    public function testRequisitionIsCreatedFromResponse()
+    public function test_requisition_is_created_from_response()
     {
         $response = new Response(200, [], self::$responseRequisition);
         self::$mock->append($response);
@@ -162,7 +166,7 @@ class NordigenIntegrationTest extends TestCase
     /**
      * @covers Nordigen\NordigenPHP\DTO\Nordigen\NordigenClient
      */
-    public function testInitSession()
+    public function test_init_session()
     {
 
         $responseEUA = new Response(200, [], self::$responseEUA);
@@ -187,9 +191,9 @@ class NordigenIntegrationTest extends TestCase
             90
         );
         $expected = [
-            "link" => "https://nordigen.com",
-            "requisitionId" => "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "endUserAgreementId" => "1234"
+            'link' => 'https://nordigen.com',
+            'requisitionId' => '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            'endUserAgreementId' => '1234',
         ];
         $this->assertEquals($expected, $actual);
     }
