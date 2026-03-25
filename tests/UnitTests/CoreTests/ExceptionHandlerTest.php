@@ -4,6 +4,7 @@ namespace UnitTests\CoreTests;
 
 use GuzzleHttp\Psr7\Response;
 use Nordigen\NordigenPHP\Exceptions\ExceptionHandler;
+use Nordigen\NordigenPHP\Exceptions\InstitutionExceptions\EulaExpiredError;
 use Nordigen\NordigenPHP\Exceptions\InstitutionExceptions\RateLimitError;
 use Nordigen\NordigenPHP\Exceptions\NordigenExceptions\NordigenException;
 use PHPUnit\Framework\TestCase;
@@ -97,5 +98,21 @@ class ExceptionHandlerTest extends TestCase
             $this->assertStringContainsString('Invalid data. Expected a dictionary, but got list.', $e->getMessage());
             $this->assertStringContainsString('Additional error information', $e->getMessage());
         }
+    }
+
+    /**
+     * @covers \Nordigen\NordigenPHP\Exceptions\ExceptionHandler
+     */
+    public function test_eula_expired_exception_is_thrown_when_summary_indicates_expired()
+    {
+        $jsonBody = json_encode([
+            'summary' => 'End User Agreement (EUA) 1a2b3c4d has expired',
+            'detail' => 'EUA was valid for 90 days and it expired at 2024-11-11 13:16:20.020248.',
+            'type' => 'SomeNewError',
+        ]);
+        $response = new Response(400, [], $jsonBody);
+
+        $this->expectException(EulaExpiredError::class);
+        ExceptionHandler::handleException($response);
     }
 }

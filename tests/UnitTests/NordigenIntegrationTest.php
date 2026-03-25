@@ -174,17 +174,6 @@ class NordigenIntegrationTest extends TestCase
 
         $responseRequisition = new Response(200, [], self::$responseRequisition);
         self::$mock->append($responseRequisition);
-
-        $responseBody = '
-            {
-                "link": "https://requisition-link.com",
-                "requisitionId": "11111",
-                "endUserAgreementId": "22222"
-            }
-        ';
-
-        $response = new Response(200, [], $responseBody);
-        self::$mock->append($response);
         $actual = self::$nordigenClient->initSession(
             'BANK',
             'https://nordigen.com',
@@ -192,8 +181,8 @@ class NordigenIntegrationTest extends TestCase
         );
         $expected = [
             'link' => 'https://nordigen.com',
-            'requisitionId' => '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-            'endUserAgreementId' => '1234',
+            'requisition_id' => '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+            'agreement_id' => '1234',
         ];
         $this->assertEquals($expected, $actual);
     }

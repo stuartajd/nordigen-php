@@ -10,6 +10,9 @@ class ExceptionHandler
     private static array $institutionExceptionMap = [
         'UnknownRequestError' => InstitutionExceptions\UnknownRequestError::class,
         'AccessExpiredError' => InstitutionExceptions\AccessExpiredError::class,
+        'EulaExpiredError' => InstitutionExceptions\EulaExpiredError::class,
+        'EndUserAgreementExpiredError' => InstitutionExceptions\EulaExpiredError::class,
+        'AgreementExpiredError' => InstitutionExceptions\EulaExpiredError::class,
         'AccountInactiveError' => InstitutionExceptions\AccountInactiveError::class,
         'ConnectionError' => InstitutionExceptions\InstitutionConnectionError::class,
         'ServiceError' => InstitutionExceptions\InstitutionServiceError::class,
@@ -83,6 +86,23 @@ class ExceptionHandler
         $errorType = self::getExceptionType($json);
         $summary = $json['summary'] ?? '';
         $detail = $json['detail'] ?? '';
+        // Detect EUA/EULA expiry even if the API `type` isn't mapped.
+        // Keep this tight to avoid misclassifying other "access expired" scenarios that mention
+        // End-user agreement wording but are not specifically about EUA expiry.
+        $isEulaExpired = (
+            (
+                stripos($summary, 'eua') !== false ||
+                stripos($summary, 'eula') !== false ||
+                stripos($detail, 'eua') !== false ||
+                stripos($detail, 'eula') !== false
+            ) && (
+                stripos($summary, 'expired') !== false ||
+                stripos($detail, 'expired') !== false
+            )
+        ) || (
+            stripos($summary, 'end user agreement') !== false &&
+            stripos($summary, 'has expired') !== false
+        );
 
         // Build comprehensive error message
         $messageParts = [];
@@ -107,6 +127,9 @@ class ExceptionHandler
         $message = ! empty($messageParts) ? implode(' ', $messageParts) : "HTTP {$errorCode} Error";
 
         $exception = self::$institutionExceptionMap[$errorType] ?? NordigenException::class;
+        if ($isEulaExpired) {
+            $exception = InstitutionExceptions\EulaExpiredError::class;
+        }
         throw new $exception($response, trim($message), $errorCode);
     }
 
