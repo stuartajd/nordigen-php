@@ -10,6 +10,10 @@ class RequestHandler
 {
     use RequestHandlerTrait;
 
+    // Guzzle waits forever by default, which would hang the caller if the API stopped answering.
+    private const TIMEOUT = 30;
+    private const CONNECT_TIMEOUT = 10;
+
     private string $accessToken;
     private array $authentication;
 
@@ -35,6 +39,8 @@ class RequestHandler
 
         return new Client([
             "base_uri" => $this->baseUri,
+            "timeout" => self::TIMEOUT,
+            "connect_timeout" => self::CONNECT_TIMEOUT,
             "headers" => [
                 "accept" => "application/json",
                 "User-Agent" => "Nordigen-PHP-v2"
@@ -64,6 +70,8 @@ class RequestHandler
         $this->accessToken = $accessToken;
         $this->httpClient = new Client([
             "base_uri" => $this->baseUri,
+            "timeout" => self::TIMEOUT,
+            "connect_timeout" => self::CONNECT_TIMEOUT,
             "headers" => [
                 "accept" => "application/json",
                 "Authorization" => "Bearer {$accessToken}"

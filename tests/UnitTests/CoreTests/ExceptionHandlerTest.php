@@ -115,4 +115,19 @@ class ExceptionHandlerTest extends TestCase
         $this->expectException(EulaExpiredError::class);
         ExceptionHandler::handleException($response);
     }
+
+    /**
+     * @covers \Nordigen\NordigenPHP\Exceptions\ExceptionHandler
+     */
+    public function test_the_response_body_can_still_be_read_from_the_exception()
+    {
+        $jsonBody = json_encode(['summary' => 'Account Suspended', 'status_code' => 409]);
+
+        try {
+            ExceptionHandler::handleException(new Response(409, [], $jsonBody));
+            $this->fail('Expected NordigenException to be thrown');
+        } catch (NordigenException $e) {
+            $this->assertSame($jsonBody, $e->getResponse()->getBody()->getContents());
+        }
+    }
 }
