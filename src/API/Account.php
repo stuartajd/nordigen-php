@@ -10,8 +10,8 @@ class Account {
     private RequestHandler $requestHandler;
 
     private string $accountId;
-    private int $rateLimit;
-    private int $rateLimitRemaining;
+    private int $rateLimit = 0;
+    private int $rateLimitRemaining = 0;
 
     public function __construct(RequestHandler $requestHandler, string $accountId) {
         $this->requestHandler = $requestHandler;

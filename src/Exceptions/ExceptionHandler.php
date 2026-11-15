@@ -37,6 +37,12 @@ class ExceptionHandler
     public static function handleException(ResponseInterface $response): void
     {
         $content = $response->getBody()->getContents();
+
+        // Leave the body readable for whoever catches the exception.
+        if ($response->getBody()->isSeekable()) {
+            $response->getBody()->rewind();
+        }
+
         $json = json_decode($content, true);
         $errorCode = $response->getStatusCode();
 
