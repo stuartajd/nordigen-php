@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased
+
+- Requests time out after 30 seconds (10 seconds to connect)
+- The response body can be read again from a thrown exception
+- `getRateLimit()` and `getRateLimitRemaining()` return 0 before transactions are fetched
+- Requires PHP 8.0
+- Added tests for the reconfirmation endpoints
+
+## [1.1.7] - 2026-03-25
+
+- Added `EulaExpiredError`, thrown when the end user agreement has expired
+
+## [1.1.6] - 2025-12-01
+
+- Fixed reconfirming an end user agreement to use POST
+- Clearer exception messages, including for responses that aren't JSON
+
+## [1.1.5] - 2025-09-12
+
+- Added the `reconfirmation` option when creating an end user agreement and in `initSession`
+- Added retrieving an end user agreement's reconfirmation
+- Added `getRateLimit()` and `getRateLimitRemaining()` to accounts
+
 ## [1.1.4] - 2025-09-12
 
 - Fixed dynamic property creation - https://github.com/nordigen/nordigen-php/pull/27
