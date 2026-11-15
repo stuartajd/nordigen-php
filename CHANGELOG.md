@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [1.1.8] - 2026-11-15
 
 - Requests time out after 30 seconds (10 seconds to connect)
 - The response body can be read again from a thrown exception
